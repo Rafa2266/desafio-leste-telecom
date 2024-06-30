@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import "./style.css"
-import { useNavigate,Link } from 'react-router-dom'
+import { useNavigate,Link, useParams } from 'react-router-dom'
 
 import robo1 from'../../assets/robo_1.jpg'
 import robo2 from '../../assets/robo_2.jpg'
@@ -17,8 +17,13 @@ export default function FormContato() {
     const [last_name, setLastName] = useState('')
     const [gender, setGender] = useState('')
     const [birthday, setBirthday] = useState('')
-    const [language, setLanguage] = useState('')
+    const [language, setLanguage] = useState('Outros')
+    const [avatar, setAvatar] = useState('')
     const [isSubmitted,setIsSubmitted] = useState(false)
+    const [isEdit,setIsEdit]=useState(false);
+    const [id,setId]=useState(null)
+    const {paramId}=useParams()
+   
 
     const navigate = useNavigate();
     const linksAvatarPhoto=[
@@ -41,36 +46,75 @@ export default function FormContato() {
             
             
             let contatoStorage = localStorage.getItem('contatos');
-            
-            let maxId=100;
+            let urlPhotoAvatar='';
+            let idAddEdit=100;
             if(contatoStorage!=null){
                 contatoStorage=JSON.parse(contatoStorage)
-                contatoStorage.forEach(c=>{
-                    if(c.id>maxId){
-                        maxId=c.id
-                    }
-                }) 
-            }else{
-                contatoStorage=[];
+                if(!isEdit){
+                    contatoStorage.forEach(c=>{
+                        if(c.id>idAddEdit){
+                            idAddEdit=c.id
+                        }
+                    })
+                }else{
+                    idAddEdit=id;
+                    urlPhotoAvatar=avatar
+                    contatoStorage=contatoStorage.filter(c=>c.id!==id)
+                }
+                 
             }
-            let urlPhotoAvatar=linksAvatarPhoto[getRandomInt(0,6)]
+            
             setIsSubmitted(true);
-            maxId+=1;
-            contatoStorage.push({'id':maxId,'email':email,'first_name':first_name,'last_name':last_name,gender:gender,birthday:birthday,language:language,avatar:urlPhotoAvatar,'localStorage':true})
-            console.log(contatoStorage)
+            if(!isEdit || contatoStorage==null){
+                if(contatoStorage==null){
+                   contatoStorage=[]; 
+                }
+                idAddEdit+=1;
+
+                urlPhotoAvatar=linksAvatarPhoto[getRandomInt(0,6)]
+            }
+            
+            contatoStorage.push({'id':idAddEdit,'email':email,'first_name':first_name,'last_name':last_name,gender:gender,birthday:birthday,language:language,avatar:urlPhotoAvatar,'localStorage':true})
             localStorage.setItem('contatos', JSON.stringify(contatoStorage));
-           
             navigate('/', { replace: true })
             alert('Contato salvo!!')
         }
         
     }
 
+    useEffect(()=>{
+            async function loadContato(){
+                if(paramId){
+                    
+                    let idTemp=parseInt(paramId)
+                    
+                    let contatoStorage = localStorage.getItem('contatos');
+                    
+                    if(contatoStorage!=null){
+                        contatoStorage=JSON.parse(contatoStorage)
+                        let contato=contatoStorage.find(c=>c.id===idTemp)
+                        if(contato){
+                            setIsEdit(true);
+                            setId(idTemp)
+                            setFirstName(contato.first_name)
+                            setLastName(contato.last_name)
+                            setEmail(contato.email)
+                            setBirthday(contato.birthday)
+                            setGender(contato.gender)
+                            setLanguage(contato.language)
+                            setAvatar(contato.avatar)
+                        } 
+                    }
+                }
+            }
+            loadContato();
+    },[paramId])
+
 
     return( 
-    <div style={{backgroundColor:'#f5e8a9'}}>
-        <div className='p-5 m-3'>
-            <h1>Adicionar contato</h1>
+    <div style={{backgroundColor:'#6eff6e'}}>
+        <div className='p-5 '>
+            <h1>{isEdit?'Editar ':'Adicionar '}Contato</h1>
             {/* <div className='col-12 mb-3' >
                         <Link to="/"><button style={{ float: 'right' }} className='btn btn-dark '>Lista de Contatos</button></Link>
                     </div> */}
@@ -98,14 +142,23 @@ export default function FormContato() {
                 </div>
                 <div className='form-group col-3'>
                     <label>Linguagem</label>
-                    <input onChange={(e) => setLanguage(e.target.value)} type='text' required className='form-control' value={language}></input>
+                    {/* <input onChange={(e) => setLanguage(e.target.value)} type='text' required className='form-control' value={language}></input> */}
+                    <select onChange={(e) => {setLanguage(e.target.value)}} className='form-control' value={language}>
+                            <option value="Alemão">Alemão</option>
+                            <option value="Inglês">Inglês</option>
+                            <option value="Poruguês (Portugal)">Poruguês (Portugal)</option>
+                            <option value="Poruguês (Brasil)">Poruguês (Brasil)</option>
+                            <option value="Espanhol">Espanhol</option>
+                            <option value="Francês">Francês</option>
+                            <option value="Outros">Outros</option>
+                    </select>
                 </div>
                 <div className='form-group col-3'>
                     <label>Data de nascimento</label>
                     <input onChange={(e) => setBirthday(e.target.value)} type='date' required className='form-control' value={birthday}></input>
                 </div>
                 <div className="col-12 mt-5">
-                    <div className="submit text-center" ><input disabled={isSubmitted} className="button-atualizar" value="Criar Contato" type="submit"></input></div>
+                    <div className="submit text-center" ><input disabled={isSubmitted} className="button-atualizar" value={isEdit?'Atualizar':'Criar Contato'} type="submit"></input></div>
                 </div>
                 <div className='col-12 mt-3 text-center' >
                         <Link to="/"><button className='btn btn-default'>Voltar para a Lista de Contatos</button></Link>
