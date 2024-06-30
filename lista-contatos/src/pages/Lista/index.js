@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import api from '../../services/api';
-import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
 import "./style.css"
 
@@ -10,27 +9,37 @@ import "./style.css"
 function Lista() {
     const [contatos, setContatos] = useState([]);
 
-    useEffect(() => {
-
-        async function loadContatos() {
-            let tempContatos=[];
+    async function deletarContato(id) {
+        if (window.confirm("Deseja deletar o contato de id: " + id + '?')) {
+            
+            let contatoStorage = localStorage.getItem('contatos');
+            if (contatoStorage != null) {
+                contatoStorage = JSON.parse(contatoStorage)
+                contatoStorage=contatoStorage.filter(r=>r.id!==id)
+                localStorage.setItem('contatos', JSON.stringify(contatoStorage));
+                loadContatos()
+                alert('Contato apagado!!')
+            }
+        }
+    }
+ async function loadContatos() {
+            let tempContatos = [];
             try {
                 const response = await api.get("")
-                tempContatos=response.data;
+                tempContatos = response.data;
             } catch (e) {
             }
 
             let contatoStorage = localStorage.getItem('contatos');
-            if(contatoStorage !=null){
-                contatoStorage=JSON.parse(contatoStorage)
-                tempContatos= tempContatos.concat(contatoStorage)
+            if (contatoStorage != null) {
+                contatoStorage = JSON.parse(contatoStorage)
+                tempContatos = tempContatos.concat(contatoStorage)
             }
             setContatos(tempContatos);
 
         }
-
+    useEffect(() => {
         loadContatos();
-
     }, [])
     return (
         <div className='p-5 m-3'>
@@ -39,7 +48,7 @@ function Lista() {
                 <div className='row mb-3'>
                     <div className='col-8'></div>
                     <div className='col-4' >
-                    <Link to="/add"><button style={{float:'right'}} className='btn btn-dark '>Adicionar Contato +</button></Link>
+                        <Link to="/add"><button style={{ float: 'right' }} className='btn btn-dark '>Adicionar Contato +</button></Link>
                     </div>
                 </div>
                 <table className='table'>
@@ -56,22 +65,32 @@ function Lista() {
                         </tr>
                     </thead>
                     <tbody>
-                        {contatos.map(
-                            contato => {
-                                return (
-                                    <tr className='row' key={contato.id}>
-                                        <td className='col-1'>{contato.id}</td>
-                                        <td className='col-1' ><img className='img-perfil' src={contato.avatar} alt={'Foto de Perfil ' + contato.id} /></td>
-                                        <td className='col-2' >{contato.first_name + " " + contato.last_name}</td>
-                                        <td className='col-2'>{contato.email}</td>
-                                        <td className='col-1'>{contato.gender === 'M' ? 'Masculino' : 'Feminino'}</td>
-                                        <td className='col-1'>{format(new Date(contato.birthday), 'dd/MM/yyyy')}</td>
-                                        <td className='col-2'>{contato.language}</td>
-                                        <td className='col-2'><button className='btn btn-dark'>Editar</button><button className='btn btn-danger m-2'>Deletar</button></td>
-                                    </tr>
-                                );
-                            }
-                        )}
+                        {
+                            contatos.map(
+                                contato => {
+                                    let dataArray=contato.birthday.split('-');
+                                    let dataFormatada=dataArray[2]+'/'+dataArray[1]+'/'+dataArray[0]
+                                    return (
+                                        <tr className='row' key={contato.id}>
+                                            <td className='col-1'>{contato.id}</td>
+                                            <td className='col-1' ><img className='img-perfil' src={contato.avatar} alt={'Foto de Perfil ' + contato.id} /></td>
+                                            <td className='col-2' >{contato.first_name + " " + contato.last_name}</td>
+                                            <td className='col-2'>{contato.email}</td>
+                                            <td className='col-1'>{contato.gender === 'M' ? 'Masculino' : (contato.gender==='F'?'Feminino':'Outros')}</td>
+                                            <td className='col-1'>{dataFormatada}</td>
+                                            <td className='col-2'>{contato.language}</td>
+                                            <td className='col-2'>
+                                                {contato.localStorage!=null? <div>
+                                                <button className='btn btn-dark'>Editar</button>
+                                                <button className='btn btn-danger m-2' onClick={(e)=>{deletarContato(contato.id)}}>Deletar</button>
+                                                </div>:<div></div>
+                                                }
+                                                
+                                            </td>
+                                        </tr>
+                                    );
+                                }
+                            )}
                     </tbody>
                 </table>
             </div>

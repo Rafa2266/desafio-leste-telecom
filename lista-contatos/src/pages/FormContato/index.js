@@ -1,7 +1,15 @@
 import { useEffect, useState } from 'react';
 
 import "./style.css"
-import { useNavigate } from 'react-router-dom'
+import { useNavigate,Link } from 'react-router-dom'
+
+import robo1 from'../../assets/robo_1.jpg'
+import robo2 from '../../assets/robo_2.jpg'
+import robo3 from '../../assets/robo_3.webp'
+import robo4 from'../../assets/robo_4.jpg'
+import robo5 from'../../assets/robo_5.webp'
+import robo6 from '../../assets/robo_6.jpg'
+import robo7 from '../../assets/robo_7.jpg'
 
 export default function FormContato() {
     const [email, setEmail] = useState('')
@@ -13,10 +21,24 @@ export default function FormContato() {
     const [isSubmitted,setIsSubmitted] = useState(false)
 
     const navigate = useNavigate();
-
+    const linksAvatarPhoto=[
+        robo1,
+        robo2,
+        robo3,
+        robo4,
+        robo5,
+        robo6,
+        robo7,
+    ]
+    function getRandomInt(min, max) {
+        const minCeiled = Math.ceil(min);
+        const maxFloored = Math.floor(max);
+        return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled); // The maximum is exclusive and the minimum is inclusive
+      }
     async function onSubmit(e){
         e.preventDefault();
         if(!isSubmitted){
+            
             
             let contatoStorage = localStorage.getItem('contatos');
             
@@ -31,12 +53,15 @@ export default function FormContato() {
             }else{
                 contatoStorage=[];
             }
-
+            let urlPhotoAvatar=linksAvatarPhoto[getRandomInt(0,6)]
             setIsSubmitted(true);
             maxId+=1;
-            contatoStorage.push({'id':maxId,'email':email,'first_name':first_name,'last_name':last_name,gender:gender,birthday:birthday,language:language,avatar:'https://img.myloview.com.br/adesivos/humano-homem-pessoa-avatar-perfil-do-usuario-vector-icon-ilustracao-700-80949470.jpg','localStorage':true})
+            contatoStorage.push({'id':maxId,'email':email,'first_name':first_name,'last_name':last_name,gender:gender,birthday:birthday,language:language,avatar:urlPhotoAvatar,'localStorage':true})
+            console.log(contatoStorage)
             localStorage.setItem('contatos', JSON.stringify(contatoStorage));
+           
             navigate('/', { replace: true })
+            alert('Contato salvo!!')
         }
         
     }
@@ -46,6 +71,9 @@ export default function FormContato() {
     <div style={{backgroundColor:'#f5e8a9'}}>
         <div className='p-5 m-3'>
             <h1>Adicionar contato</h1>
+            {/* <div className='col-12 mb-3' >
+                        <Link to="/"><button style={{ float: 'right' }} className='btn btn-dark '>Lista de Contatos</button></Link>
+                    </div> */}
             <div className='mt-3' >
             <form className="form row" onSubmit={onSubmit}>
                 <div className='form-group col-3'>
@@ -62,7 +90,7 @@ export default function FormContato() {
                 </div>
                 <div className='form-group col-3'>
                     <label>Gênero</label>
-                    <select onChange={(e) => {console.log(e.target.value);setGender(e.target.value)}} className='form-control' value={gender}>
+                    <select onChange={(e) => {setGender(e.target.value)}} className='form-control' value={gender}>
                             <option value="M">Masculino</option>
                             <option value="F">Feminino</option>
                             <option value="">Outros</option>
@@ -79,6 +107,9 @@ export default function FormContato() {
                 <div className="col-12 mt-5">
                     <div className="submit text-center" ><input disabled={isSubmitted} className="button-atualizar" value="Criar Contato" type="submit"></input></div>
                 </div>
+                <div className='col-12 mt-3 text-center' >
+                        <Link to="/"><button className='btn btn-default'>Voltar para a Lista de Contatos</button></Link>
+                    </div>
             </form>
             </div>
 
