@@ -15,7 +15,7 @@ export default function FormContato() {
     const [email, setEmail] = useState('')
     const [first_name, setFirstName] = useState('')
     const [last_name, setLastName] = useState('')
-    const [gender, setGender] = useState('')
+    const [gender, setGender] = useState('Outros')
     const [birthday, setBirthday] = useState('')
     const [language, setLanguage] = useState('Outros')
     const [avatar, setAvatar] = useState('')
@@ -112,7 +112,7 @@ export default function FormContato() {
 
 
     return( 
-    <div style={{backgroundColor:'#6eff6e'}}>
+    <div style={{backgroundColor:'#b6d6bc'}}>
         <div className='p-5 '>
             <h1>{isEdit?'Editar ':'Adicionar '}Contato</h1>
             {/* <div className='col-12 mb-3' >
@@ -137,11 +137,11 @@ export default function FormContato() {
                     <select onChange={(e) => {setGender(e.target.value)}} className='form-control' value={gender}>
                             <option value="M">Masculino</option>
                             <option value="F">Feminino</option>
-                            <option value="">Outros</option>
+                            <option value="Outros">Outros</option>
                     </select>
                 </div>
                 <div className='form-group col-3'>
-                    <label>Linguagem</label>
+                    <label>Idioma</label>
                     {/* <input onChange={(e) => setLanguage(e.target.value)} type='text' required className='form-control' value={language}></input> */}
                     <select onChange={(e) => {setLanguage(e.target.value)}} className='form-control' value={language}>
                             <option value="Alemão">Alemão</option>
