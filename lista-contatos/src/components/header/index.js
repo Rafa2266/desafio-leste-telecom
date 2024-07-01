@@ -9,7 +9,7 @@ function Header(){
 
       <div>
         <Link to="/">Lista de Contatos</Link>
-        <Link to="/">Estatístca dos Contatos</Link>
+        <Link to="/analise">Análise dos Contatos</Link>
       </div>
     </header>
   )

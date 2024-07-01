@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../../services/api';
-import { Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import "./style.css"
 
 
@@ -13,7 +13,8 @@ function Lista() {
     const [filterAgeMin, setFilterAgeMin] = useState(undefined);
     const [filterMonthBirth, setFilterMonthBirth] = useState('');
     const [filterLanguage, setFilterLanguage] = useState('');
-    
+    const [filterLanguageOptions, setFilterLanguageOptions] = useState([]);
+
     async function deletarContato(id) {
         if (window.confirm("Deseja deletar o contato de id: " + id + '?')) {
 
@@ -22,7 +23,7 @@ function Lista() {
                 contatoStorage = JSON.parse(contatoStorage)
                 contatoStorage = contatoStorage.filter(r => r.id !== id)
                 localStorage.setItem('contatos', JSON.stringify(contatoStorage));
-                
+
                 alert('Contato apagado!!')
                 window.location.reload();
             }
@@ -33,76 +34,83 @@ function Lista() {
         let ano_atual = d.getFullYear()
         let mes_atual = d.getMonth() + 1
         let dia_atual = d.getDate()
-    
+
         ano_aniversario = +ano_aniversario
         mes_aniversario = +mes_aniversario
         dia_aniversario = +dia_aniversario
 
         let quantos_anos = ano_atual - ano_aniversario;
-    
+
         if (mes_atual < mes_aniversario || (mes_atual === mes_aniversario && dia_atual < dia_aniversario)) {
             quantos_anos--;
         }
-    
+
         return quantos_anos < 0 ? 0 : quantos_anos;
     }
-    
-   
+
+
     useEffect(() => {
 
-         async function loadContatos(filterAgeMax,filterAgeMin,filterGender,filterLanguage,filterMonthBirth) {
-        let tempContatos = [];
-        try {
-            const response = await api.get("")
-            tempContatos = response.data;
-        } catch (e) {
+        async function loadContatos(filterAgeMax, filterAgeMin, filterGender, filterLanguage, filterMonthBirth) {
+            let tempContatos = [];
+            try {
+                const response = await api.get("")
+                tempContatos = response.data;
+            } catch (e) {
+            }
+
+            let contatoStorage = localStorage.getItem('contatos');
+            if (contatoStorage != null) {
+                contatoStorage = JSON.parse(contatoStorage)
+                tempContatos = tempContatos.concat(contatoStorage)
+            }
+            let tempFilterOptionsLanguage=[];
+            tempContatos.forEach(c => {
+                if(tempFilterOptionsLanguage.indexOf(c.language)===-1){
+                    tempFilterOptionsLanguage.push(c.language)
+                }
+            });
+            setFilterLanguageOptions(tempFilterOptionsLanguage)
+
+            if (filterAgeMax && filterAgeMin) {
+                tempContatos = tempContatos.filter(c => {
+                    let data = new Date(c.birthday)
+                    let age = idade(data.getFullYear(), data.getMonth(), data.getDate())
+                    return filterAgeMax >= age && filterAgeMin <= age
+                })
+            }
+
+            if (filterMonthBirth !== '') {
+                tempContatos = tempContatos.filter(c => {
+                    let data = new Date(c.birthday)
+                    return parseInt(filterMonthBirth) === data.getMonth() + 1
+                })
+            }
+
+            if (filterGender !== '') {
+                tempContatos = tempContatos.filter(c => {
+                    return filterGender === c.gender
+                })
+            }
+
+            if (filterLanguage !== '') {
+                tempContatos = tempContatos.filter(c => {
+                    return filterLanguage === c.language
+                })
+            }
+
+            setContatos(tempContatos.sort((a, b) => a.id - b.id));
+
         }
 
-        let contatoStorage = localStorage.getItem('contatos');
-        if (contatoStorage != null) {
-            contatoStorage = JSON.parse(contatoStorage)
-            tempContatos = tempContatos.concat(contatoStorage)
-        }
-
-        if(filterAgeMax && filterAgeMin){
-            tempContatos=tempContatos.filter(c=> {
-                let data = new Date(c.birthday)
-                let age= idade(data.getFullYear(),data.getMonth(),data.getDate())
-                return filterAgeMax >= age && filterAgeMin <= age
-            })
-        }
-
-        if(filterMonthBirth!==''){
-            tempContatos=tempContatos.filter(c=>{
-                let data = new Date(c.birthday)
-                return parseInt(filterMonthBirth)===data.getMonth()+1
-            })
-        }
-
-        if(filterGender!==''){
-            tempContatos=tempContatos.filter(c=>{
-                return filterGender===c.gender
-            })
-        }
-
-        if(filterLanguage!==''){
-            tempContatos=tempContatos.filter(c=>{
-                return filterLanguage===c.language
-            })
-        }
-
-        setContatos(tempContatos.sort((a, b) => a.id - b.id));
-
-    }
-
-        loadContatos(filterAgeMax,filterAgeMin,filterGender,filterLanguage,filterMonthBirth);
-    }, [filterAgeMax,filterAgeMin,filterGender,filterLanguage,filterMonthBirth])
+        loadContatos(filterAgeMax, filterAgeMin, filterGender, filterLanguage, filterMonthBirth);
+    }, [filterAgeMax, filterAgeMin, filterGender, filterLanguage, filterMonthBirth])
     return (
         <div className='p-5' >
             <h1 >Lista de Contatos</h1>
             <div className='mt-3'>
                 <div className='row mb-3'>
-                    <div style={{backgroundColor:'#b6d6bc'}} className='col-12 form p-4 row'>
+                    <div style={{ backgroundColor: '#b6d6bc' }} className='col-12 form p-4 row'>
                         <h3 className='mb-2'>Filtro</h3>
                         <div className='form-group col-2'>
                             <label>Gênero</label>
@@ -117,13 +125,19 @@ function Lista() {
                             <label>Idioma</label>
                             <select onChange={(e) => { setFilterLanguage(e.target.value) }} className='form-control' value={filterLanguage}>
                                 <option value="">Selecione uma opção</option>
-                                <option value="Alemão">Alemão</option>
+                                {/* <option value="Alemão">Alemão</option>
                                 <option value="Inglês">Inglês</option>
                                 <option value="Poruguês (Portugal)">Poruguês (Portugal)</option>
                                 <option value="Poruguês (Brasil)">Poruguês (Brasil)</option>
                                 <option value="Espanhol">Espanhol</option>
                                 <option value="Francês">Francês</option>
-                                <option value="Outros">Outros</option>
+                                <option value="Outros">Outros</option> */
+                                filterLanguageOptions.map(language=>{
+                                    return (
+                                        <option value={language}>{language}</option>
+                                    );
+                                })
+                                }
                             </select>
                         </div>
                         <div className='form-group col-3'>
@@ -159,7 +173,7 @@ function Lista() {
                 </div>
                 <table className='table'>
                     <thead className='thead-dark table-dark'>
-                        <tr className='row table-dark'>
+                        <tr className='row'>
                             <th className='col-1 text-center'>ID</th>
                             <th className='col-1 text-center'>Avatar</th>
                             <th className='col-2 text-center'>Nome</th>
