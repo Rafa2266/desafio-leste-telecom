@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Lista from "./pages/Lista"
-import FormContato from "./pages/formContato"
+import FormContato from "./pages/FormContato"
 import Header from "./components/header";
 import Analise from "./pages/Analise";
 
