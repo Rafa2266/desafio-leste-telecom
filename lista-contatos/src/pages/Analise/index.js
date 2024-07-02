@@ -60,15 +60,15 @@ export default function Analise() {
 
     return (
         <div className='p-5'>
-            <h1 >Análise dos Contatos</h1>
+            <h1 >Contact Analysis</h1>
             <div className='mt-5 row'>
                 <div className='col-5 mr-3'>
-                <h2 className='text-center mb-3'>Análise do número de contatos por Gênero</h2>
+                <h2 className='text-center mb-3'>Analysis of the number of contacts by Gender</h2>
                     <table className='table'>
                         <thead className='thead-dark table-dark'>
                             <tr className='row'>
-                                <th className='col-6 text-center'>Gênero</th>
-                                <th className='col-6 text-center'>Número de contatos</th>
+                                <th className='col-6 text-center'>Gender</th>
+                                <th className='col-6 text-center'>Number of contacts</th>
                             </tr>
 
                         </thead>
@@ -78,7 +78,7 @@ export default function Analise() {
                                     gender=>{
                                         return(
                                             <tr className='row' key={gender.key}>
-                                                 <td className='col-6 d-flex flex-column justify-content-center align-items-center'>{gender.key === 'M' ? 'Masculino' : (gender.key === 'F' ? 'Feminino' : 'Outros')}</td>
+                                                 <td className='col-6 d-flex flex-column justify-content-center align-items-center'>{gender.key === 'M' ? 'Masculine' : (gender.key === 'F' ? 'Feminine' : 'Others')}</td>
                                                  <td className='col-6 d-flex flex-column justify-content-center align-items-center'>{gender.value}</td>
                                             </tr>
                                         )
@@ -90,16 +90,16 @@ export default function Analise() {
                 </div>
                 <div className='col-2'></div>
                 <div className='col-5'>
-                    <h2 className='text-center mb-3'>Análise do número de contatos por Idioma</h2>
+                    <h2 className='text-center mb-3'>Analysis of the number of contacts by Language</h2>
                     <table className='table'>
                         <thead className='thead-dark table-dark'>
                             <tr className='row'>
-                                <th className='col-6 text-center'>Idioma</th>
-                                <th className='col-6 text-center'>Número de contatos</th>
+                                <th className='col-6 text-center'>Language</th>
+                                <th className='col-6 text-center'>Number of contacts</th>
                             </tr>
 
                         </thead>
-                        <tbody>
+                        <tbody className='tbody-contacts'>
                             {
                                 analiseContatosLanguage.map(
                                     language=>{

@@ -15,9 +15,9 @@ export default function FormContato() {
     const [email, setEmail] = useState('')
     const [first_name, setFirstName] = useState('')
     const [last_name, setLastName] = useState('')
-    const [gender, setGender] = useState('Outros')
+    const [gender, setGender] = useState('Others')
     const [birthday, setBirthday] = useState('')
-    const [language, setLanguage] = useState('Outros')
+    const [language, setLanguage] = useState('Others')
     const [avatar, setAvatar] = useState('')
     const [isSubmitted,setIsSubmitted] = useState(false)
     const [isEdit,setIsEdit]=useState(false);
@@ -77,7 +77,7 @@ export default function FormContato() {
             contatoStorage.push({'id':idAddEdit,'email':email,'first_name':first_name,'last_name':last_name,gender:gender,birthday:birthday,language:language,avatar:urlPhotoAvatar,'localStorage':true})
             localStorage.setItem('contatos', JSON.stringify(contatoStorage));
             navigate('/', { replace: true })
-            alert('Contato salvo!!')
+            alert('Contact save!!')
         }
         
     }
@@ -114,18 +114,18 @@ export default function FormContato() {
     return( 
     <div style={{backgroundColor:'#b6d6bc'}}>
         <div className='p-5 '>
-            <h1>{isEdit?'Editar ':'Adicionar '}Contato</h1>
+            <h1>{isEdit?'Edit ':'Create '}Contact</h1>
             {/* <div className='col-12 mb-3' >
                         <Link to="/"><button style={{ float: 'right' }} className='btn btn-dark '>Lista de Contatos</button></Link>
                     </div> */}
             <div className='mt-3' >
             <form className="form row" onSubmit={onSubmit}>
                 <div className='form-group col-3'>
-                    <label>Primeiro Nome</label>
+                    <label>First Name</label>
                     <input  onChange={(e) => setFirstName(e.target.value)} type='text' required className='form-control' value={first_name}></input>
                 </div>
                 <div className='form-group col-3'>
-                    <label>Último Sobrenome</label>
+                    <label>Last name</label>
                     <input onChange={(e) => setLastName(e.target.value)} type='text' required className='form-control' value={last_name}></input>
                 </div>
                 <div className='form-group col-3'>
@@ -133,35 +133,34 @@ export default function FormContato() {
                     <input onChange={(e) => setEmail(e.target.value)} type='email' required className='form-control' value={email}></input>
                 </div>
                 <div className='form-group col-3'>
-                    <label>Gênero</label>
+                    <label>Gender</label>
                     <select onChange={(e) => {setGender(e.target.value)}} className='form-control' value={gender}>
-                            <option value="M">Masculino</option>
-                            <option value="F">Feminino</option>
-                            <option value="Outros">Outros</option>
+                            <option value="M">Masculine</option>
+                            <option value="F">Feminine</option>
+                            <option value="Others">Others</option>
                     </select>
                 </div>
                 <div className='form-group col-3'>
-                    <label>Idioma</label>
+                    <label>Language</label>
                     {/* <input onChange={(e) => setLanguage(e.target.value)} type='text' required className='form-control' value={language}></input> */}
                     <select onChange={(e) => {setLanguage(e.target.value)}} className='form-control' value={language}>
-                            <option value="Alemão">Alemão</option>
-                            <option value="Inglês">Inglês</option>
-                            <option value="Poruguês (Portugal)">Poruguês (Portugal)</option>
-                            <option value="Poruguês (Brasil)">Poruguês (Brasil)</option>
-                            <option value="Espanhol">Espanhol</option>
-                            <option value="Francês">Francês</option>
-                            <option value="Outros">Outros</option>
+                            <option value="German">German</option>
+                            <option value="English">English</option>
+                            <option value="Portuguese">Portuguese</option>
+                            <option value="Spanish">Spanish</option>
+                            <option value="French">French</option>
+                            <option value="Others">Others</option>
                     </select>
                 </div>
                 <div className='form-group col-3'>
-                    <label>Data de nascimento</label>
+                    <label>Date of birth</label>
                     <input onChange={(e) => setBirthday(e.target.value)} type='date' required className='form-control' value={birthday}></input>
                 </div>
                 <div className="col-12 mt-5">
-                    <div className="submit text-center" ><input disabled={isSubmitted} className="button-atualizar" value={isEdit?'Atualizar':'Criar Contato'} type="submit"></input></div>
+                    <div className="submit text-center" ><input disabled={isSubmitted} className="button-atualizar" value={isEdit?'Update':'Create Contact'} type="submit"></input></div>
                 </div>
                 <div className='col-12 mt-3 text-center' >
-                        <Link to="/"><button className='btn btn-default'>Voltar para a Lista de Contatos</button></Link>
+                        <Link to="/"><button className='btn btn-default'>Return to Contact List</button></Link>
                     </div>
             </form>
             </div>

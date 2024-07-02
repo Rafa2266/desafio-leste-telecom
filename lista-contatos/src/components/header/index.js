@@ -1,5 +1,5 @@
 
-import { Link } from 'react-router-dom';
+import { Link,useLocation } from 'react-router-dom';
 import './style.css';
 
 function Header(){
@@ -8,8 +8,8 @@ function Header(){
       <h2>Leste Telecom</h2>
 
       <div>
-        <Link to="/">Lista de Contatos</Link>
-        <Link to="/analise">Análise dos Contatos</Link>
+        <Link style={{fontWeight:useLocation().pathname==='/'?1000:100}} to="/">Contact List</Link>
+        <Link style={{fontWeight:useLocation().pathname==='/analise'?1000:100}} to="/analise">Contact Analysis</Link>
       </div>
     </header>
   )
