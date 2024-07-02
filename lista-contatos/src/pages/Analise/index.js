@@ -5,6 +5,8 @@ import "./style.css"
 export default function Analise() {
     const [analiseContatosGender, setAnaliseContatosGender] = useState([]);
     const [analiseContatosLanguage, setAnaliseContatosLanguage] = useState([]);
+    const [loading,setLoading]=useState(true);
+
 
     useEffect(() => {
         async function loadContatos() {
@@ -51,12 +53,21 @@ export default function Analise() {
             tempLanguagesArray.sort((a,b)=>b.value-a.value)
             setAnaliseContatosGender(tempGendersArray)
             setAnaliseContatosLanguage(tempLanguagesArray)
+            setLoading(false)
 
         }
 
         loadContatos()
 
     }, [])
+
+    if(loading){
+        return(
+          <div className='loading'>
+            <h2>Loading contact analysis...</h2>
+          </div>
+        )
+      }
 
     return (
         <div className='p-5'>

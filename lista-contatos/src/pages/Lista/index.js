@@ -15,6 +15,7 @@ function Lista() {
     const [filterMonthBirth, setFilterMonthBirth] = useState('');
     const [filterLanguage, setFilterLanguage] = useState('');
     const [filterLanguageOptions, setFilterLanguageOptions] = useState([]);
+    const [loading,setLoading]=useState(true);
 
     async function deletarContato(id) {
         if (window.confirm("Do you want to delete contact of id: " + id + '?')) {
@@ -74,11 +75,11 @@ function Lista() {
                 });
                 setContatos(tempContatos);
                 setFilterLanguageOptions(tempFilterOptionsLanguage)
+                setLoading(false)
             }else{
                 tempContatos=contatos
             }
             
-
             if (filterAgeMax && filterAgeMin) {
                 tempContatos = tempContatos.filter(c => {
                     let data = new Date(c.birthday)
@@ -107,11 +108,20 @@ function Lista() {
             }
 
             setContatosFilter(tempContatos.sort((a, b) => a.id - b.id));
-
+            
         }
 
         loadContatos(filterAgeMax, filterAgeMin, filterGender, filterLanguage, filterMonthBirth);
     }, [filterAgeMax, filterAgeMin, filterGender, filterLanguage, filterMonthBirth,contatos])
+
+    if(loading){
+        return(
+          <div className='loading'>
+            <h2>Loading contacts...</h2>
+          </div>
+        )
+      }
+
     return (
         <div className='p-3' >
             <h1 >Contact List</h1>
