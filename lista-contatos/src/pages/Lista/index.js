@@ -112,7 +112,7 @@ function Lista() {
         }
 
         loadContatos(filterAgeMax, filterAgeMin, filterGender, filterLanguage, filterMonthBirth);
-    }, [filterAgeMax, filterAgeMin, filterGender, filterLanguage, filterMonthBirth,contatos])
+    }, [filterAgeMax, filterAgeMin, filterGender, filterLanguage, filterMonthBirth])
 
     if(loading){
         return(
