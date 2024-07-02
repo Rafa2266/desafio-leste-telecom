@@ -5,6 +5,7 @@ import "./style.css"
 export default function Analise() {
     const [analiseContatosGender, setAnaliseContatosGender] = useState([]);
     const [analiseContatosLanguage, setAnaliseContatosLanguage] = useState([]);
+    const [totalNumberContatos,setTotalNumberContatos]=useState(null);
     const [loading,setLoading]=useState(true);
 
 
@@ -24,6 +25,7 @@ export default function Analise() {
             }
             let tempGenders = {};
             let tempLanguages = {};
+            setTotalNumberContatos(tempContatos.length)
             tempContatos.forEach(c => {
                 if (tempGenders[c.gender] !== undefined) {
                     tempGenders[c.gender] += 1
@@ -96,6 +98,10 @@ export default function Analise() {
                                     }
                                 )
                             }
+                            <tr className='row' key='total'>
+                                <td className='col-6 d-flex flex-column justify-content-center align-items-center fw-bold'>Total</td>
+                                <td className='col-6 d-flex flex-column justify-content-center align-items-center fw-bold'>{totalNumberContatos}</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -103,7 +109,7 @@ export default function Analise() {
                 <div className='col-5'>
                     <h2 className='text-center mb-3'>Analysis of the number of contacts by Language</h2>
                     <table className='table'>
-                        <thead className='thead-dark table-dark'>
+                        <thead className='thead-dark table-dark thead-contacts'>
                             <tr className='row'>
                                 <th className='col-6 text-center'>Language</th>
                                 <th className='col-6 text-center'>Number of contacts</th>
@@ -123,6 +129,10 @@ export default function Analise() {
                                     }
                                 )
                             }
+                            <tr className='row' key='total'>
+                                <td className='col-6 d-flex flex-column justify-content-center align-items-center fw-bold'>Total</td>
+                                <td className='col-6 d-flex flex-column justify-content-center align-items-center fw-bold'>{totalNumberContatos}</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

@@ -15,3 +15,10 @@
     overflow-x :hidden;
     height:250px;
 }
+
+.thead-contacts{
+    display:flex;
+    flex-direction:column;
+    overflow-y :auto;
+    overflow-x :hidden;
+}

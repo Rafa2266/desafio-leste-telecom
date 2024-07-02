@@ -183,7 +183,7 @@ function Lista() {
                     </div>
                 </div>
                 <table className='table'>
-                    <thead  className='thead-dark table-dark'>
+                    <thead  className='thead-dark table-dark thead-contacts'>
                         <tr className='row'>
                             <th className='col-1 text-center'>ID</th>
                             <th className='col-1 text-center'>Avatar</th>
