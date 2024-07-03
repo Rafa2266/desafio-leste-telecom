@@ -46,8 +46,12 @@ export default function FormContato() {
             
             
             let contatoStorage = localStorage.getItem('contatos');
-            let urlPhotoAvatar='';
+            let urlPhotoAvatar=avatar;
             let idAddEdit=100;
+            if(urlPhotoAvatar===''){
+                alert('Choose a avatar !!')
+                return;
+            }
             if(contatoStorage!=null){
                 contatoStorage=JSON.parse(contatoStorage)
                 if(!isEdit){
@@ -58,7 +62,7 @@ export default function FormContato() {
                     })
                 }else{
                     idAddEdit=id;
-                    urlPhotoAvatar=avatar
+                    //urlPhotoAvatar=avatar
                     contatoStorage=contatoStorage.filter(c=>c.id!==id)
                 }
                  
@@ -71,7 +75,7 @@ export default function FormContato() {
                 }
                 idAddEdit+=1;
 
-                urlPhotoAvatar=linksAvatarPhoto[getRandomInt(0,6)]
+                //urlPhotoAvatar=avatar
             }
             
             contatoStorage.push({'id':idAddEdit,'email':email,'first_name':first_name,'last_name':last_name,gender:gender,birthday:birthday,language:language,avatar:urlPhotoAvatar,'localStorage':true})
@@ -155,6 +159,19 @@ export default function FormContato() {
                 <div className='form-group col-3'>
                     <label>Date of birth</label>
                     <input onChange={(e) => setBirthday(e.target.value)} type='date' required className='form-control' value={birthday}></input>
+                </div>
+                <div className=' mt-5 col-12 text-center'>
+                    <h3 className='mb-4'>Avatars</h3>
+                    {
+                        linksAvatarPhoto.map(link=>{
+                            return(
+                                    <span onClick={(e)=> setAvatar(link)} className='p-3 py-5' style={{backgroundColor:avatar===link?'#a13ffc':'#9586a3', cursor:'pointer'}}><img className='img-perfil' src={link} alt={'Foto do avatar'} /></span>
+                                    
+                               
+                            );
+                        })
+                    }
+                    
                 </div>
                 <div className="col-12 mt-5">
                     <div className="submit text-center" ><input disabled={isSubmitted} className="button-atualizar" value={isEdit?'Update':'Create Contact'} type="submit"></input></div>
